@@ -20,7 +20,7 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
 
     private ParseUser currentUser;
 
-    private TextView userName;
+    private TextView userNameTextView;
     private Button logout;
 
 
@@ -32,10 +32,10 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
 
         currentUser = BloQueryApplication.getCurrentUser();
 
-        userName = (TextView) findViewById(R.id.bloquery_tv_userName);
+        userNameTextView = (TextView) findViewById(R.id.bloquery_tv_userName);
 
         if (currentUser != null) {
-            userName.setText(currentUser.getUsername());
+            userNameTextView.setText(currentUser.getUsername());
         }
 
         logout = (Button) findViewById(R.id.bloquery_btn_logout);
@@ -50,7 +50,7 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
         currentUser = BloQueryApplication.getCurrentUser();
 
         if (currentUser != null) {
-            userName.setText(currentUser.getUsername());
+            userNameTextView.setText(currentUser.getUsername());
         } else {
             Intent loginIntent = new Intent(BloQueryActivity.this, LoginActivity.class);
             startActivity(loginIntent);
@@ -60,6 +60,7 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
     @Override
     public void onClick(View v) {
         ParseUser.logOutInBackground();
+        userNameTextView.setText(null);
         startActivity(new Intent(BloQueryActivity.this, LoginActivity.class));
 
     }

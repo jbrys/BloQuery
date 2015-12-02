@@ -2,6 +2,7 @@ package com.jbrys.android.bloquery.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
@@ -27,6 +28,10 @@ public class SignupActivity extends AppCompatActivity  {
     private EditText mPassword;
     private EditText mPasswordConfirm;
 
+    private TextInputLayout mPasswordLayout;
+    private TextInputLayout mConfirmLayout;
+
+
     private String emailTxt;
     private String passwordTxt;
     private String confirmTxt;
@@ -41,6 +46,9 @@ public class SignupActivity extends AppCompatActivity  {
         mPassword = (EditText) findViewById(R.id.bloquery_txt_password);
         mPasswordConfirm = (EditText) findViewById(R.id.bloquery_txt_password_confirm);
 
+        mPasswordLayout = (TextInputLayout) findViewById(R.id.bloquery_layout_password);
+        mConfirmLayout = (TextInputLayout) findViewById(R.id.bloquery_layout_password_confirm);
+
         mSignUp = (AppCompatButton) findViewById(R.id.bloquery_btn_sign_up);
         mSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,9 +59,16 @@ public class SignupActivity extends AppCompatActivity  {
                 confirmTxt = mPasswordConfirm.getText().toString();
 
                 if (!passwordTxt.equals(confirmTxt)){
-                    mPasswordConfirm.setError("Passwords do not match");
+                    mPasswordLayout.setError("Passwords do not match.");
+                    mConfirmLayout.setError("Passwords do not match.");
 
                 } else {
+
+
+                    mPasswordLayout.setError(null);
+                    mConfirmLayout.setError(null);
+                    mPasswordLayout.setErrorEnabled(false);
+                    mConfirmLayout.setErrorEnabled(false);
 
                     User user = new User(emailTxt, passwordTxt);
                     user.signUpInBackground(new SignUpCallback() {
