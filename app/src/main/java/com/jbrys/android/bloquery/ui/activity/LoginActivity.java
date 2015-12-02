@@ -3,7 +3,7 @@ package com.jbrys.android.bloquery.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText mEmail;
     private EditText mPassword;
-    private CardView mLoginCardView;
+    private AppCompatButton mLoginButton;
     private TextView mSignupPrompt;
 
     private String userNameTxt;
@@ -47,8 +47,8 @@ public class LoginActivity extends AppCompatActivity {
         mEmail = (EditText) findViewById(R.id.bloquery_txt_email);
         mPassword = (EditText) findViewById(R.id.bloquery_txt_password);
 
-        mLoginCardView = (CardView) findViewById(R.id.bloquery_cv_login);
-        mLoginCardView.setOnClickListener(new View.OnClickListener() {
+        mLoginButton = (AppCompatButton) findViewById(R.id.bloquery_btn_login);
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 emailTxt = mEmail.getText().toString();
