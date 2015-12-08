@@ -76,8 +76,8 @@ public class SignupActivity extends AppCompatActivity  {
                         public void done(ParseException e) {
                             if (e == null) {
                                 Intent resultIntent = new Intent();
-                                resultIntent.putExtra(SIGNUP_RESULT_USER_NAME, "foo");
-                                resultIntent.putExtra(SIGNUP_RESULT_USER_PASSWORD, "bar");
+                                resultIntent.putExtra(SIGNUP_RESULT_USER_NAME, emailTxt);
+                                resultIntent.putExtra(SIGNUP_RESULT_USER_PASSWORD, passwordTxt);
                                 setResult(SIGNUP_INTENT_CODE, resultIntent);
                                 finish();
                             } else {
