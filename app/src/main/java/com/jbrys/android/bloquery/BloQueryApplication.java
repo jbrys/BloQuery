@@ -2,6 +2,7 @@ package com.jbrys.android.bloquery;
 
 import android.app.Application;
 
+import com.jbrys.android.bloquery.api.DataSource;
 import com.jbrys.android.bloquery.api.model.User;
 import com.parse.Parse;
 import com.parse.ParseUser;
@@ -16,6 +17,7 @@ public class BloQueryApplication extends Application {
     }
 
     private static BloQueryApplication sharedInstance;
+    private DataSource dataSource;
 
     private static ParseUser currentUser = null;
 
@@ -24,6 +26,7 @@ public class BloQueryApplication extends Application {
         super.onCreate();
 
         sharedInstance = this;
+        dataSource = new DataSource();
 
         Parse.enableLocalDatastore(this);
         ParseUser.registerSubclass(User.class);
@@ -39,5 +42,13 @@ public class BloQueryApplication extends Application {
 
     public static void setCurrentUser(ParseUser currentUser) {
         BloQueryApplication.currentUser = currentUser;
+    }
+
+    public static DataSource getSharedDataSource() {
+        return BloQueryApplication.getSharedInstance().getDataSource();
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
     }
 }
