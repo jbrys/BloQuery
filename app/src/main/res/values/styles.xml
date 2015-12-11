@@ -26,4 +26,15 @@
         <item name="android:layout_margin">8dp</item>
     </style>
 
+    <style name="QuestionCardText" >
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">24dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:background">@drawable/round_corners</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>
