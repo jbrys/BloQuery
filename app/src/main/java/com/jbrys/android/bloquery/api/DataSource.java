@@ -29,6 +29,7 @@ public class DataSource {
 
                 } else {
                     Log.e("Question", "Error: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         });

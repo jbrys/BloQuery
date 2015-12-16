@@ -27,13 +27,13 @@ public class BloQueryApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        sharedInstance = this;
-        dataSource = new DataSource();
-
         Parse.enableLocalDatastore(this);
         ParseUser.registerSubclass(User.class);
         ParseObject.registerSubclass(Question.class);
         Parse.initialize(this, "piFsT12m1vuIAklPVzM9SK4c1TsQygWM0jT1NYny", "wqn5T3dyxfCGDeXwTtI4MtUKwml9RJuchfjCzpkv");
+
+        sharedInstance = this;
+        dataSource = new DataSource();
 
         if (User.getCurrentUser() != null)
             currentUser = User.getCurrentUser();

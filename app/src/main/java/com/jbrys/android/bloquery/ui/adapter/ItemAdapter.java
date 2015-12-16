@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.jbrys.android.bloquery.BloQueryApplication;
@@ -27,6 +28,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
 
     @Override
     public void onBindViewHolder(ItemAdapterViewHolder holder, int position) {
+
         DataSource sharedDatasource = BloQueryApplication.getSharedDataSource();
         holder.update(sharedDatasource.getQuestionList().get(position));
     }
@@ -43,12 +45,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
         TextView questionTextView;
         TextView askerName;
         TextView expandedQuestionTextView;
+        Button answersButton;
 
         public ItemAdapterViewHolder(View itemView) {
             super(itemView);
 
             questionTextView = (TextView) itemView.findViewById(R.id.question_txt);
             expandedQuestionTextView = (TextView) itemView.findViewById(R.id.question_expanded);
+            answersButton = (Button) itemView.findViewById(R.id.btn_answers);
             questionTextView.setOnClickListener(this);
             expandedQuestionTextView.setOnClickListener(this);
         }
@@ -56,6 +60,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
         void update(Question question) {
             questionTextView.setText(question.getQuestionText());
             expandedQuestionTextView.setText(question.getQuestionText());
+            answersButton.setText(question.getNumAnswers() + " Answers");
         }
 
 

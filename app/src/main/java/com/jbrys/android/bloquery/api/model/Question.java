@@ -16,43 +16,61 @@ public class Question extends ParseObject{
     public Question(){
     }
 
-    public Question(String questionText, String askerName, int numAnswers, int interest) {
+    public Question(String questionText, String askerId, int numAnswers, int interest) {
 
         this.questionText = questionText;
-        this.askerId = askerName;
+        this.askerId = askerId;
         this.numAnswers = numAnswers;
         this.interest = interest;
     }
 
     public String getQuestionText() {
-        return questionText;
+        return (questionText == null) ? getString("questionText") : questionText;
     }
 
     public void setQuestionText(String questionText) {
-        this.questionText = questionText;
+        if (this.questionText == null) {
+            put("questionText", questionText);
+        } else {
+            this.questionText = questionText;
+        }
+
     }
 
     public String getAskerId() {
-        return askerId;
+        return (askerId == null) ? getString("askerId") : askerId;
     }
 
     public void setAskerId(String askerId) {
-        this.askerId = askerId;
+         if (this.askerId == null) {
+             put("askerId", askerId);
+         } else {
+             this.askerId = askerId;
+         }
     }
 
     public int getNumAnswers() {
-        return numAnswers;
+        return numAnswers == 0 ? getInt("numAnswers") : numAnswers;
     }
 
     public void setNumAnswers(int numAnswers) {
-        this.numAnswers = numAnswers;
+
+        if (this.numAnswers == 0) {
+            put("numAnswers", numAnswers);
+        } else {
+            this.numAnswers = numAnswers;
+        }
     }
 
     public int getInterest() {
-        return interest;
+        return (this.interest == 0) ? getInt("interestScore") : interest;
     }
 
     public void setInterest(int interest) {
-        this.interest = interest;
+        if (this.interest == 0) {
+            put("interestScore", interest);
+        }else {
+            this.interest = interest;
+        }
     }
 }
