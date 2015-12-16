@@ -1,17 +1,25 @@
 package com.jbrys.android.bloquery.api.model;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
 /**
  * Created by jeffbrys on 12/8/15.
  */
-public class Question {
+@ParseClassName("Question")
+public class Question extends ParseObject{
     private String questionText;
-    private String askerName;
+    private String askerId;
     private int numAnswers;
     private int interest;
 
+    public Question(){
+    }
+
     public Question(String questionText, String askerName, int numAnswers, int interest) {
+
         this.questionText = questionText;
-        this.askerName = askerName;
+        this.askerId = askerName;
         this.numAnswers = numAnswers;
         this.interest = interest;
     }
@@ -24,12 +32,12 @@ public class Question {
         this.questionText = questionText;
     }
 
-    public String getAskerName() {
-        return askerName;
+    public String getAskerId() {
+        return askerId;
     }
 
-    public void setAskerName(String askerName) {
-        this.askerName = askerName;
+    public void setAskerId(String askerId) {
+        this.askerId = askerId;
     }
 
     public int getNumAnswers() {

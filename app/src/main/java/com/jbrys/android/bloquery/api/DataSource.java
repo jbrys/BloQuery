@@ -1,6 +1,11 @@
 package com.jbrys.android.bloquery.api;
 
+import android.util.Log;
+
 import com.jbrys.android.bloquery.api.model.Question;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +19,21 @@ public class DataSource {
 
     public DataSource() {
         mQuestionList = new ArrayList<Question>();
-        createFakeData();
+        ParseQuery<Question> query = ParseQuery.getQuery("Question");
+        query.whereExists("questionText");
+        query.findInBackground(new FindCallback<Question>() {
+            @Override
+            public void done(List<Question> list, ParseException e) {
+                if (e == null) {
+                    addQuestions(list);
+
+                } else {
+                    Log.e("Question", "Error: " + e.getMessage());
+                }
+            }
+        });
+
+//        createFakeData();
     }
 
     public List<Question> getQuestionList() {
@@ -27,4 +46,11 @@ public class DataSource {
                     "FooBar", 99, 0));
         }
     }
+
+    void addQuestions (List<Question> list) {
+        for (Question q : list){
+            mQuestionList.add(q);
+        }
+    }
+
 }
