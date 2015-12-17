@@ -13,6 +13,7 @@ import com.jbrys.android.bloquery.api.DataSource;
 import com.jbrys.android.bloquery.api.model.Question;
 import com.jbrys.android.bloquery.ui.adapter.ItemAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class QuestionsFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private ItemAdapter mAdapter;
-    private List<Question> mQuestionList;
+    private List<Question> mQuestionList = new ArrayList<>();
 
 
     @Override
@@ -57,6 +58,7 @@ public class QuestionsFragment extends Fragment {
 
         mAdapter = new ItemAdapter(mQuestionList);
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
 }
