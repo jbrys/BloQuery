@@ -33,7 +33,6 @@ public class BloQueryApplication extends Application {
         Parse.initialize(this, "piFsT12m1vuIAklPVzM9SK4c1TsQygWM0jT1NYny", "wqn5T3dyxfCGDeXwTtI4MtUKwml9RJuchfjCzpkv");
 
         sharedInstance = this;
-        dataSource = new DataSource();
 
         if (User.getCurrentUser() != null)
             currentUser = User.getCurrentUser();

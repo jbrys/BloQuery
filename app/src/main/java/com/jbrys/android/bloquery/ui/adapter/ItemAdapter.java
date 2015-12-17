@@ -9,16 +9,22 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.jbrys.android.bloquery.BloQueryApplication;
 import com.jbrys.android.bloquery.R;
-import com.jbrys.android.bloquery.api.DataSource;
 import com.jbrys.android.bloquery.api.model.Question;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jeffbrys on 12/8/15.
  */
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterViewHolder> {
 
+    private List<Question> mQuestionList = new ArrayList<>();
+
+    public ItemAdapter(List<Question> questions){
+        mQuestionList = questions;
+    }
 
     @Override
     public ItemAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -29,13 +35,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
     @Override
     public void onBindViewHolder(ItemAdapterViewHolder holder, int position) {
 
-        DataSource sharedDatasource = BloQueryApplication.getSharedDataSource();
-        holder.update(sharedDatasource.getQuestionList().get(position));
+        holder.update(mQuestionList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return BloQueryApplication.getSharedDataSource().getQuestionList().size();
+        return mQuestionList == null ? 0 : mQuestionList.size();
     }
 
     class ItemAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

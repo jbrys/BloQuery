@@ -64,4 +64,5 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
         startActivity(new Intent(BloQueryActivity.this, LoginActivity.class));
 
     }
+
 }

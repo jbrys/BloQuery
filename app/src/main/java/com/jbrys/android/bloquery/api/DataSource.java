@@ -15,31 +15,25 @@ import java.util.List;
  */
 public class DataSource {
 
+    public static interface DataSourceChangedListener {
+        public void onDataLoaded(List<Question> questions);
+    }
+
+    private DataSourceChangedListener mListener;
     private List<Question> mQuestionList;
 
     public DataSource() {
+        this.mListener = null;
         mQuestionList = new ArrayList<Question>();
-        ParseQuery<Question> query = ParseQuery.getQuery("Question");
-        query.whereExists("questionText");
-        query.findInBackground(new FindCallback<Question>() {
-            @Override
-            public void done(List<Question> list, ParseException e) {
-                if (e == null) {
-                    addQuestions(list);
-
-                } else {
-                    Log.e("Question", "Error: " + e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-        });
+        loadQuestionsAsync();
 
 //        createFakeData();
     }
 
-    public List<Question> getQuestionList() {
-        return mQuestionList;
+    public void setDataSourceChangedListener(DataSourceChangedListener listener) {
+        this.mListener = listener;
     }
+
 
     void createFakeData() {
         for (int i = 0; i < 10; i++) {
@@ -48,10 +42,22 @@ public class DataSource {
         }
     }
 
-    void addQuestions (List<Question> list) {
-        for (Question q : list){
-            mQuestionList.add(q);
-        }
+
+    void loadQuestionsAsync() {
+        ParseQuery<Question> query = ParseQuery.getQuery("Question");
+        query.whereExists("questionText");
+        query.findInBackground(new FindCallback<Question>() {
+            @Override
+            public void done(List<Question> list, ParseException e) {
+                if (e == null) {
+                    mListener.onDataLoaded(list);
+
+                } else {
+                    Log.e("Question", "Error: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }

@@ -9,7 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jbrys.android.bloquery.R;
+import com.jbrys.android.bloquery.api.DataSource;
+import com.jbrys.android.bloquery.api.model.Question;
 import com.jbrys.android.bloquery.ui.adapter.ItemAdapter;
+
+import java.util.List;
 
 /**
  * Created by jeffbrys on 12/8/15.
@@ -18,11 +22,14 @@ public class QuestionsFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private ItemAdapter mAdapter;
+    private List<Question> mQuestionList;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
-        mAdapter = new ItemAdapter();
     }
 
     @Override
@@ -36,6 +43,19 @@ public class QuestionsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+        DataSource dataSource = new DataSource();
+        dataSource.setDataSourceChangedListener(new DataSource.DataSourceChangedListener() {
+            @Override
+            public void onDataLoaded(List<Question> questions) {
+                for (Question q : questions) {
+                    mQuestionList.add(q);
+                }
+            }
+        });
+
+        mAdapter = new ItemAdapter(mQuestionList);
         mRecyclerView.setAdapter(mAdapter);
     }
 
