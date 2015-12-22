@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-                  android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:paddingTop="24dp"
-                  android:paddingLeft="8dp"
-                  android:paddingRight="8dp"
-                  android:focusableInTouchMode="true">
-
-
-
-        <fragment
-            android:name="com.jbrys.android.bloquery.ui.fragment.QuestionsFragment"
-            android:id="@+id/questions_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            tools:layout="@layout/questions_fragment" />
+        <LinearLayout
+                      android:orientation="vertical"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:paddingTop="24dp"
+                      android:paddingLeft="8dp"
+                      android:paddingRight="8dp"
+                      android:focusableInTouchMode="true">
 
 
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/colorTextIcons">
 
-        <fragment
-            android:name="com.jbrys.android.bloquery.ui.fragment.UserFragment"
-            android:id="@+id/user_fragment"
+            <fragment
+                android:name="com.jbrys.android.bloquery.ui.fragment.QuestionsFragment"
+                android:id="@+id/questions_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                tools:layout="@layout/questions_fragment" />
+
+
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="240dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            tools:layout="@layout/user_fragment"/>
+            android:background="@color/colorTextIcons">
 
-    </LinearLayout>
-</android.support.v4.widget.DrawerLayout>
+            <fragment
+                android:name="com.jbrys.android.bloquery.ui.fragment.UserFragment"
+                android:id="@+id/user_fragment"
+                android:layout_width="240dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                tools:layout="@layout/user_fragment"/>
+
+        </LinearLayout>
+    </android.support.v4.widget.DrawerLayout>

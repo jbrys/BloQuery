@@ -21,7 +21,7 @@ import java.util.List;
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterViewHolder> {
 
     private List<Question> mQuestionList = new ArrayList<>();
-    private ValueAnimator mValueAnimator;
+
 
     public ItemAdapter(List<Question> questions){
         mQuestionList = questions;
@@ -47,6 +47,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
     class ItemAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         boolean contentExpanded;
+        ValueAnimator valueAnimator;
 
         TextView questionTextView;
         TextView askerName;
@@ -134,13 +135,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
         }
 
         private void startAnimator(int start, int end, ValueAnimator.AnimatorUpdateListener animatorUpdateListener){
-            mValueAnimator = ValueAnimator.ofInt(start, end);
-            mValueAnimator.addUpdateListener(animatorUpdateListener);
+            valueAnimator = ValueAnimator.ofInt(start, end);
+            valueAnimator.addUpdateListener(animatorUpdateListener);
 
-            mValueAnimator.setDuration(questionTextView.getResources().getInteger(android.R.integer.config_mediumAnimTime));
+            valueAnimator.setDuration(questionTextView.getResources().getInteger(android.R.integer.config_mediumAnimTime));
 
-            mValueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-            mValueAnimator.start();
+            valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            valueAnimator.start();
         }
     }
 }

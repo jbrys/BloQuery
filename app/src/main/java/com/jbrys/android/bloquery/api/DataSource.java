@@ -9,6 +9,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,7 +18,8 @@ import java.util.List;
 public class DataSource {
 
     public static interface DataSourceChangedListener {
-        public void onDataLoaded(List<Question> questions);
+        public void onQuestionsLoaded(List<Question> questions);
+        public void onRecentQuestionsLoaded(List<Question> questions);
     }
 
     private DataSourceChangedListener mListener;
@@ -55,12 +57,11 @@ public class DataSource {
                             Question.pinAllInBackground("questions", list);
                         }
                     });
-                    mListener.onDataLoaded(list);
+                    mListener.onQuestionsLoaded(list);
 
 
                 } else {
-                    Log.e("Question", "Error: " + e.getMessage());
-                    e.printStackTrace();
+                    logError(e);
                 }
             }
         });
@@ -75,14 +76,35 @@ public class DataSource {
             @Override
             public void done(List<Question> list, ParseException e) {
                 if (e == null){
-                    mListener.onDataLoaded(list);
+                    mListener.onQuestionsLoaded(list);
 
                 } else {
-                    Log.e("Question", "Error: " + e.getMessage());
-                    e.printStackTrace();
+                    logError(e);
                 }
             }
         });
+    }
+
+    public void loadQuestionsSince(Date date) {
+        ParseQuery<Question> query = ParseQuery.getQuery("Question");
+        query.whereGreaterThan("createdAt", date);
+
+        query.findInBackground(new FindCallback<Question>() {
+            @Override
+            public void done(List<Question> objects, ParseException e) {
+                if (e == null){
+                    mListener.onRecentQuestionsLoaded(objects);
+
+                } else {
+                    logError(e);
+                }
+            }
+        });
+    }
+
+    private void logError(ParseException e) {
+        Log.e("Question", "Error: " + e.getMessage());
+        e.printStackTrace();
     }
 
 }

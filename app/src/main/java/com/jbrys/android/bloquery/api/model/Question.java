@@ -73,4 +73,5 @@ public class Question extends ParseObject{
             this.interest = interest;
         }
     }
+
 }

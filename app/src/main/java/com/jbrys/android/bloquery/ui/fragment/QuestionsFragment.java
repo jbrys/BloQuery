@@ -2,6 +2,7 @@ package com.jbrys.android.bloquery.ui.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ public class QuestionsFragment extends Fragment {
 
     private DataSource mDataSource;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private ItemAdapter mAdapter;
     private List<Question> mQuestionList = new ArrayList<>();
@@ -39,6 +41,7 @@ public class QuestionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View inflate = inflater.inflate(R.layout.questions_fragment, container, false);
         mRecyclerView = (RecyclerView) inflate.findViewById(R.id.rv_question_list);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) inflate.findViewById(R.id.srl_question_list);
         return inflate;
     }
 
@@ -49,15 +52,34 @@ public class QuestionsFragment extends Fragment {
 
         mAdapter = new ItemAdapter(mQuestionList);
         mRecyclerView.setAdapter(mAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (mQuestionList == null)
+                    return;
+
+                mDataSource.loadQuestionsSince(mQuestionList.get(0).getCreatedAt());
+            }
+        });
 
         mDataSource = new DataSource();
         mDataSource.setDataSourceChangedListener(new DataSource.DataSourceChangedListener() {
             @Override
-            public void onDataLoaded(List<Question> questions) {
+            public void onQuestionsLoaded(List<Question> questions) {
                 for (Question q : questions) {
                     mQuestionList.add(q);
                 }
                 mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onRecentQuestionsLoaded(List<Question> questions) {
+                for (Question q : questions) {
+                    mQuestionList.addAll(0, questions);
+                }
+                mSwipeRefreshLayout.setRefreshing(false);
+                mAdapter.notifyItemRangeInserted(0, questions.size());
+                mRecyclerView.smoothScrollToPosition(0);
             }
         });
 
