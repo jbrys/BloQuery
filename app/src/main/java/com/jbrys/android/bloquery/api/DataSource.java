@@ -43,7 +43,7 @@ public class DataSource {
     }
 
 
-    void loadQuestionsAsync() {
+    public void loadQuestionsAsync() {
         ParseQuery<Question> query = ParseQuery.getQuery("Question");
         query.whereExists("questionText");
         query.findInBackground(new FindCallback<Question>() {

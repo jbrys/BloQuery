@@ -21,6 +21,8 @@ import java.util.List;
  */
 public class QuestionsFragment extends Fragment {
 
+    private DataSource mDataSource;
+
     private RecyclerView mRecyclerView;
     private ItemAdapter mAdapter;
     private List<Question> mQuestionList = new ArrayList<>();
@@ -45,20 +47,26 @@ public class QuestionsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        mAdapter = new ItemAdapter(mQuestionList);
+        mRecyclerView.setAdapter(mAdapter);
 
-        DataSource dataSource = new DataSource();
-        dataSource.setDataSourceChangedListener(new DataSource.DataSourceChangedListener() {
+        mDataSource = new DataSource();
+        mDataSource.setDataSourceChangedListener(new DataSource.DataSourceChangedListener() {
             @Override
             public void onDataLoaded(List<Question> questions) {
                 for (Question q : questions) {
                     mQuestionList.add(q);
                 }
+                mAdapter.notifyDataSetChanged();
             }
         });
 
-        mAdapter = new ItemAdapter(mQuestionList);
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+
+
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }

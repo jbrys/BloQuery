@@ -21,6 +21,7 @@ import java.util.List;
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterViewHolder> {
 
     private List<Question> mQuestionList = new ArrayList<>();
+    private ValueAnimator mValueAnimator;
 
     public ItemAdapter(List<Question> questions){
         mQuestionList = questions;
@@ -117,7 +118,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
 
                     expandedQuestionTextView.getLayoutParams().height = animatedFraction == 1f ?
                             ViewGroup.LayoutParams.WRAP_CONTENT :
-                            (Integer) valueAnimator.getAnimatedValue();
+                            (int) valueAnimator.getAnimatedValue();
 
                     expandedQuestionTextView.requestLayout();
                     if (animatedFraction == 1f) {
@@ -133,13 +134,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
         }
 
         private void startAnimator(int start, int end, ValueAnimator.AnimatorUpdateListener animatorUpdateListener){
-            ValueAnimator valueAnimator = ValueAnimator.ofInt(start, end);
-            valueAnimator.addUpdateListener(animatorUpdateListener);
+            mValueAnimator = ValueAnimator.ofInt(start, end);
+            mValueAnimator.addUpdateListener(animatorUpdateListener);
 
-            valueAnimator.setDuration(questionTextView.getResources().getInteger(android.R.integer.config_mediumAnimTime));
+            mValueAnimator.setDuration(questionTextView.getResources().getInteger(android.R.integer.config_mediumAnimTime));
 
-            valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-            valueAnimator.start();
+            mValueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            mValueAnimator.start();
         }
     }
 }
