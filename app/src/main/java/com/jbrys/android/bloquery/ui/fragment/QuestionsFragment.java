@@ -61,6 +61,11 @@ public class QuestionsFragment extends Fragment {
             }
         });
 
+        mDataSource.loadQuestionsFromLocal();
+        if (mQuestionList.isEmpty()) {
+            mDataSource.loadQuestionsAsync();
+        }
+
 
 
     }

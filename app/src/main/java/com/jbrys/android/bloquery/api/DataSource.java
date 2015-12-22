@@ -3,6 +3,7 @@ package com.jbrys.android.bloquery.api;
 import android.util.Log;
 
 import com.jbrys.android.bloquery.api.model.Question;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -24,9 +25,7 @@ public class DataSource {
 
     public DataSource() {
         this.mListener = null;
-        mQuestionList = new ArrayList<Question>();
-        loadQuestionsAsync();
-
+        mQuestionList = new ArrayList<>();
 //        createFakeData();
     }
 
@@ -45,11 +44,37 @@ public class DataSource {
 
     public void loadQuestionsAsync() {
         ParseQuery<Question> query = ParseQuery.getQuery("Question");
-        query.whereExists("questionText");
+        query.orderByDescending("createdAt");
+        query.findInBackground(new FindCallback<Question>() {
+            @Override
+            public void done(final List<Question> list, ParseException e) {
+                if (e == null) {
+                    Question.unpinAllInBackground("questions", new DeleteCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            Question.pinAllInBackground("questions", list);
+                        }
+                    });
+                    mListener.onDataLoaded(list);
+
+
+                } else {
+                    Log.e("Question", "Error: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void loadQuestionsFromLocal() {
+        ParseQuery<Question> query = ParseQuery.getQuery("Question");
+        query.orderByDescending("createdAt");
+        query.fromLocalDatastore();
+
         query.findInBackground(new FindCallback<Question>() {
             @Override
             public void done(List<Question> list, ParseException e) {
-                if (e == null) {
+                if (e == null){
                     mListener.onDataLoaded(list);
 
                 } else {
