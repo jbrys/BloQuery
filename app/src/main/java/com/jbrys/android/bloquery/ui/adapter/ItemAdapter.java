@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.jbrys.android.bloquery.R;
 import com.jbrys.android.bloquery.api.model.Question;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,12 @@ import java.util.List;
  */
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterViewHolder> {
 
+    public static interface Listener {
+        void onItemAnswersClicked(ItemAdapter itemAdapter, Question question);
+    }
+
     private List<Question> mQuestionList = new ArrayList<>();
+    private WeakReference<Listener> mListener;
 
 
     public ItemAdapter(List<Question> questions){
@@ -44,8 +50,20 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
         return mQuestionList == null ? 0 : mQuestionList.size();
     }
 
+    public Listener getListener() {
+        if (mListener == null)
+            return null;
+
+        return mListener.get();
+    }
+
+    public void setListener(Listener listener) {
+        this.mListener = new WeakReference<>(listener);
+    }
+
     class ItemAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        Question mQuestion;
         boolean contentExpanded;
         ValueAnimator valueAnimator;
 
@@ -60,11 +78,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
             questionTextView = (TextView) itemView.findViewById(R.id.question_txt);
             expandedQuestionTextView = (TextView) itemView.findViewById(R.id.question_expanded);
             answersButton = (Button) itemView.findViewById(R.id.btn_answers);
+
+
             questionTextView.setOnClickListener(this);
             expandedQuestionTextView.setOnClickListener(this);
+            answersButton.setOnClickListener(this);
         }
 
         void update(Question question) {
+            this.mQuestion = question;
             questionTextView.setText(question.getQuestionText());
             expandedQuestionTextView.setText(question.getQuestionText());
             answersButton.setText(question.getNumAnswers() + " Answers");
@@ -79,6 +101,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
             if (v == questionTextView || v == expandedQuestionTextView) {
                 animateContent(!contentExpanded);
 
+            }
+
+            if (v == answersButton){
+                if (getListener() != null) {
+                    getListener().onItemAnswersClicked(ItemAdapter.this, mQuestion);
+                }
             }
         }
 

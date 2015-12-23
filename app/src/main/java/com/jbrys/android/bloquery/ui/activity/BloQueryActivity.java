@@ -9,20 +9,21 @@ import android.widget.TextView;
 
 import com.jbrys.android.bloquery.BloQueryApplication;
 import com.jbrys.android.bloquery.R;
+import com.jbrys.android.bloquery.api.model.Question;
+import com.jbrys.android.bloquery.ui.fragment.QuestionDetailFragment;
+import com.jbrys.android.bloquery.ui.fragment.QuestionsFragment;
 import com.parse.ParseUser;
 
 /**
  * Created by jeffbrys on 11/23/15.
  */
-public class BloQueryActivity extends AppCompatActivity implements Button.OnClickListener{
-
+public class BloQueryActivity extends AppCompatActivity implements Button.OnClickListener, QuestionsFragment.Listener{
     private final String TAG = getClass().getSimpleName();
 
     private ParseUser currentUser;
 
     private TextView userNameTextView;
     private Button logout;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,4 +66,11 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
 
     }
 
+    @Override
+    public void onItemAnswersClicked(QuestionsFragment questionsFragment, Question question) {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.questions_list_fragment, QuestionDetailFragment.detailFragmentForQuestion(question))
+                .addToBackStack(null)
+                .commit();
+    }
 }

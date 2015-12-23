@@ -18,8 +18,8 @@ import java.util.List;
 public class DataSource {
 
     public static interface DataSourceChangedListener {
-        public void onQuestionsLoaded(List<Question> questions);
-        public void onRecentQuestionsLoaded(List<Question> questions);
+        void onQuestionsLoaded(List<Question> questions);
+        void onRecentQuestionsLoaded(List<Question> questions);
     }
 
     private DataSourceChangedListener mListener;

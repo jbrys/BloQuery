@@ -1,6 +1,7 @@
 package com.jbrys.android.bloquery.ui.fragment;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,13 +15,18 @@ import com.jbrys.android.bloquery.api.DataSource;
 import com.jbrys.android.bloquery.api.model.Question;
 import com.jbrys.android.bloquery.ui.adapter.ItemAdapter;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by jeffbrys on 12/8/15.
  */
-public class QuestionsFragment extends Fragment {
+public class QuestionsFragment extends Fragment implements ItemAdapter.Listener {
+
+    public static interface Listener {
+        public void onItemAnswersClicked(QuestionsFragment questionsFragment, Question question);
+    }
 
     private DataSource mDataSource;
 
@@ -29,10 +35,17 @@ public class QuestionsFragment extends Fragment {
     private ItemAdapter mAdapter;
     private List<Question> mQuestionList = new ArrayList<>();
 
+    private WeakReference<Listener> mListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        mListener = new WeakReference<>((Listener) context);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
 
         super.onCreate(savedInstanceState);
     }
@@ -51,6 +64,7 @@ public class QuestionsFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mAdapter = new ItemAdapter(mQuestionList);
+        mAdapter.setListener(this);
         mRecyclerView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -95,5 +109,12 @@ public class QuestionsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onItemAnswersClicked(ItemAdapter itemAdapter, Question question) {
+        if (mListener != null) {
+            mListener.get().onItemAnswersClicked(this, question);
+        }
     }
 }
