@@ -30,6 +30,9 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.bloquery_activity);
+        getFragmentManager().beginTransaction()
+                .add(R.id.bloquery_list_layout, new QuestionsFragment())
+                .commit();
 
         currentUser = BloQueryApplication.getCurrentUser();
 
@@ -69,7 +72,7 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
     @Override
     public void onItemAnswersClicked(QuestionsFragment questionsFragment, Question question) {
         getFragmentManager().beginTransaction()
-                .replace(R.id.questions_list_fragment, QuestionDetailFragment.detailFragmentForQuestion(question))
+                .replace(R.id.bloquery_list_layout, QuestionDetailFragment.detailFragmentForQuestion(question))
                 .addToBackStack(null)
                 .commit();
     }

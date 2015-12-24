@@ -1,7 +1,7 @@
 package com.jbrys.android.bloquery.ui.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,13 +35,13 @@ public class QuestionsFragment extends Fragment implements ItemAdapter.Listener 
     private ItemAdapter mAdapter;
     private List<Question> mQuestionList = new ArrayList<>();
 
-    private WeakReference<Listener> mListener;
+    private WeakReference<Listener> mListenerRef;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
-        mListener = new WeakReference<>((Listener) context);
+        mListenerRef = new WeakReference<>((Listener) activity);
     }
 
     @Override
@@ -113,8 +113,8 @@ public class QuestionsFragment extends Fragment implements ItemAdapter.Listener 
 
     @Override
     public void onItemAnswersClicked(ItemAdapter itemAdapter, Question question) {
-        if (mListener != null) {
-            mListener.get().onItemAnswersClicked(this, question);
+        if (mListenerRef.get() != null) {
+            mListenerRef.get().onItemAnswersClicked(this, question);
         }
     }
 }

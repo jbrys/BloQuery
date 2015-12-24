@@ -65,7 +65,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
 
         Question mQuestion;
         boolean contentExpanded;
-        ValueAnimator valueAnimator;
+        ValueAnimator mValueAnimator;
 
         TextView questionTextView;
         TextView askerName;
@@ -119,11 +119,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
                 return;
             }
 
-            int startingHeight = expandedQuestionTextView.getMeasuredHeight();
-            int finalHeight = questionTextView.getMeasuredHeight();
-            if (expand) {
 
-                startingHeight = finalHeight;
+
+            TextView startView;
+            TextView endView;
+            if (expand) {
+                startView = questionTextView;
+                endView = expandedQuestionTextView;
+
                 expandedQuestionTextView.setAlpha(0f);
                 expandedQuestionTextView.setVisibility(View.VISIBLE);
 
@@ -131,10 +134,22 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
                         View.MeasureSpec.makeMeasureSpec(questionTextView.getWidth(), View.MeasureSpec.EXACTLY),
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 );
-                finalHeight = expandedQuestionTextView.getMeasuredHeight();
+
             } else {
+                startView = expandedQuestionTextView;
+                endView = questionTextView;
+
                 questionTextView.setVisibility(View.VISIBLE);
             }
+
+            float fraction = mValueAnimator != null ? mValueAnimator.getAnimatedFraction() : 0;
+            final float startingHeight = endView.getMeasuredHeight() * fraction + (1 - fraction) * startView.getMeasuredHeight();
+            float finalHeight = endView.getMeasuredHeight();
+            if (mValueAnimator != null) {
+                mValueAnimator.cancel();
+                mValueAnimator = null;
+            }
+
             startAnimator(startingHeight, finalHeight, new ValueAnimator.AnimatorUpdateListener(){
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -156,20 +171,22 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
                         } else {
                             expandedQuestionTextView.setVisibility(View.GONE);
                         }
+                        mValueAnimator = null;
                     }
+
                 }
             });
             contentExpanded = expand;
         }
 
-        private void startAnimator(int start, int end, ValueAnimator.AnimatorUpdateListener animatorUpdateListener){
-            valueAnimator = ValueAnimator.ofInt(start, end);
-            valueAnimator.addUpdateListener(animatorUpdateListener);
+        private void startAnimator(float start, float end, ValueAnimator.AnimatorUpdateListener animatorUpdateListener){
+            mValueAnimator = ValueAnimator.ofFloat(start, end);
+            mValueAnimator.addUpdateListener(animatorUpdateListener);
 
-            valueAnimator.setDuration(questionTextView.getResources().getInteger(android.R.integer.config_mediumAnimTime));
+            mValueAnimator.setDuration(questionTextView.getResources().getInteger(android.R.integer.config_mediumAnimTime));
 
-            valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-            valueAnimator.start();
+            mValueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            mValueAnimator.start();
         }
     }
 }
