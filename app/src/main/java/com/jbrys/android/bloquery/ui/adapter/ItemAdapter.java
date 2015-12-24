@@ -162,7 +162,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
 
                     expandedQuestionTextView.getLayoutParams().height = animatedFraction == 1f ?
                             ViewGroup.LayoutParams.WRAP_CONTENT :
-                            (int) valueAnimator.getAnimatedValue();
+                            (int) ((float)valueAnimator.getAnimatedValue());
 
                     expandedQuestionTextView.requestLayout();
                     if (animatedFraction == 1f) {

@@ -70,6 +70,17 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
     }
 
     @Override
+    public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+        } else {
+            getFragmentManager().popBackStack();
+        }
+    }
+
+    @Override
     public void onItemAnswersClicked(QuestionsFragment questionsFragment, Question question) {
         getFragmentManager().beginTransaction()
                 .replace(R.id.bloquery_list_layout, QuestionDetailFragment.detailFragmentForQuestion(question))
