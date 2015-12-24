@@ -81,6 +81,9 @@ public class QuestionsFragment extends Fragment implements ItemAdapter.Listener 
             @Override
             public void onQuestionsLoaded(List<Question> questions) {
                 for (Question q : questions) {
+                    if (mQuestionList.contains(q)){
+                        continue;
+                    }
                     mQuestionList.add(q);
                 }
                 mAdapter.notifyDataSetChanged();
