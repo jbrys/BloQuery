@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import com.jbrys.android.bloquery.R;
 import com.jbrys.android.bloquery.api.DataSource;
 import com.jbrys.android.bloquery.api.model.Question;
-import com.jbrys.android.bloquery.ui.adapter.ItemAdapter;
+import com.jbrys.android.bloquery.ui.adapter.QuestionItemAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by jeffbrys on 12/8/15.
  */
-public class QuestionsFragment extends Fragment implements ItemAdapter.Listener {
+public class QuestionsFragment extends Fragment implements QuestionItemAdapter.Listener {
 
     public static interface Listener {
         public void onItemAnswersClicked(QuestionsFragment questionsFragment, Question question);
@@ -32,7 +32,7 @@ public class QuestionsFragment extends Fragment implements ItemAdapter.Listener 
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
-    private ItemAdapter mAdapter;
+    private QuestionItemAdapter mAdapter;
     private List<Question> mQuestionList = new ArrayList<>();
 
     private WeakReference<Listener> mListenerRef;
@@ -63,7 +63,7 @@ public class QuestionsFragment extends Fragment implements ItemAdapter.Listener 
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mAdapter = new ItemAdapter(mQuestionList);
+        mAdapter = new QuestionItemAdapter(mQuestionList);
         mAdapter.setListener(this);
         mRecyclerView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -77,7 +77,7 @@ public class QuestionsFragment extends Fragment implements ItemAdapter.Listener 
         });
 
         mDataSource = new DataSource();
-        mDataSource.setDataSourceChangedListener(new DataSource.DataSourceChangedListener() {
+        mDataSource.setQuestionChangedListener(new DataSource.QuestionChangedListener() {
             @Override
             public void onQuestionsLoaded(List<Question> questions) {
                 for (Question q : questions) {
@@ -115,7 +115,7 @@ public class QuestionsFragment extends Fragment implements ItemAdapter.Listener 
     }
 
     @Override
-    public void onItemAnswersClicked(ItemAdapter itemAdapter, Question question) {
+    public void onItemAnswersClicked(QuestionItemAdapter questionItemAdapter, Question question) {
         if (mListenerRef.get() != null) {
             mListenerRef.get().onItemAnswersClicked(this, question);
         }

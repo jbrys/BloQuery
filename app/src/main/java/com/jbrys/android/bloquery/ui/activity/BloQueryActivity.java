@@ -2,6 +2,7 @@ package com.jbrys.android.bloquery.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -83,6 +84,7 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
     @Override
     public void onItemAnswersClicked(QuestionsFragment questionsFragment, Question question) {
         getFragmentManager().beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.bloquery_list_layout, QuestionDetailFragment.detailFragmentForQuestion(question))
                 .addToBackStack(null)
                 .commit();
