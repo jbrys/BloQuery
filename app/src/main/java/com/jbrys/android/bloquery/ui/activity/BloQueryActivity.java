@@ -9,13 +9,15 @@ import android.widget.TextView;
 
 import com.jbrys.android.bloquery.BloQueryApplication;
 import com.jbrys.android.bloquery.R;
+import com.jbrys.android.bloquery.api.model.Question;
+import com.jbrys.android.bloquery.ui.fragment.QuestionDetailFragment;
+import com.jbrys.android.bloquery.ui.fragment.QuestionsFragment;
 import com.parse.ParseUser;
 
 /**
  * Created by jeffbrys on 11/23/15.
  */
-public class BloQueryActivity extends AppCompatActivity implements Button.OnClickListener{
-
+public class BloQueryActivity extends AppCompatActivity implements Button.OnClickListener, QuestionsFragment.Listener{
     private final String TAG = getClass().getSimpleName();
 
     private ParseUser currentUser;
@@ -23,12 +25,14 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
     private TextView userNameTextView;
     private Button logout;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.bloquery_activity);
+        getFragmentManager().beginTransaction()
+                .add(R.id.bloquery_list_layout, new QuestionsFragment())
+                .commit();
 
         currentUser = BloQueryApplication.getCurrentUser();
 
@@ -63,5 +67,24 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
         userNameTextView.setText(null);
         startActivity(new Intent(BloQueryActivity.this, LoginActivity.class));
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+        } else {
+            getFragmentManager().popBackStack();
+        }
+    }
+
+    @Override
+    public void onItemAnswersClicked(QuestionsFragment questionsFragment, Question question) {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.bloquery_list_layout, QuestionDetailFragment.detailFragmentForQuestion(question))
+                .addToBackStack(null)
+                .commit();
     }
 }
