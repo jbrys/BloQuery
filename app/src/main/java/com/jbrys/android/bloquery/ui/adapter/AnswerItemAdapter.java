@@ -21,8 +21,11 @@ public class AnswerItemAdapter extends RecyclerView.Adapter<AnswerItemAdapter.An
 
     public AnswerItemAdapter(List<Answer> answers) { mAnswerList = answers;}
 
+    String votes;
+
     @Override
     public AnswerItemAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        votes = parent.getResources().getString(R.string.votes);
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.answer_item,
                 parent, false);
         return new AnswerItemAdapterViewHolder(inflate);
@@ -43,16 +46,21 @@ public class AnswerItemAdapter extends RecyclerView.Adapter<AnswerItemAdapter.An
         Answer mAnswer;
 
         TextView answerTextView;
+        TextView votesTextView;
 
         public AnswerItemAdapterViewHolder(View itemView) {
             super(itemView);
 
             answerTextView = (TextView) itemView.findViewById(R.id.answer_txt);
+            votesTextView = (TextView) itemView.findViewById(R.id.votes_txt);
         }
 
         void update(Answer answer) {
             this.mAnswer = answer;
+            votes = String.format("%d %s", answer.getUpvotes(), votes);
+
             answerTextView.setText(answer.getAnswerText());
+            votesTextView.setText(votes);
         }
     }
 }

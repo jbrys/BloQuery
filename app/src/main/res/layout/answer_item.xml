@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text=" votes"/>
+                android:text="@string/votes"/>
 
             <View
                 android:layout_width="0dp"
