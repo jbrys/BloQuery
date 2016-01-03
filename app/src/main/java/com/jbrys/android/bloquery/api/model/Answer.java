@@ -22,7 +22,6 @@ public class Answer extends ParseObject {
     }
 
 
-
     public String getQuestionId() {
         return getString(QUESTION_ID);
     }
@@ -58,4 +57,6 @@ public class Answer extends ParseObject {
     public void incrementUpvotes() {
         increment(UPVOTES);
     }
+
+
 }

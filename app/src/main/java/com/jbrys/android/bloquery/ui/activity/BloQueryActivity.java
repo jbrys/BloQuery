@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +23,10 @@ import com.parse.ParseUser;
 /**
  * Created by jeffbrys on 11/23/15.
  */
-public class BloQueryActivity extends AppCompatActivity implements Button.OnClickListener, QuestionsFragment.Listener{
+public class BloQueryActivity extends AppCompatActivity implements
+        Button.OnClickListener,
+        QuestionsFragment.Listener,
+        AnswerQuestionDialog.AnswerDialogListener{
     private final String TAG = getClass().getSimpleName();
 
     private ParseUser currentUser;
@@ -129,7 +133,7 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
         getFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.bloquery_list_layout, QuestionDetailFragment.detailFragmentForQuestion(question))
-                .addToBackStack(null)
+                .addToBackStack("ANSWER")
                 .commit();
 
     }
@@ -137,5 +141,18 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
     public void showAnswerQuestionDialog() {
         AnswerQuestionDialog dialog = new AnswerQuestionDialog();
         dialog.show(getSupportFragmentManager(), "answer");
+    }
+
+
+    @Override
+    public void onDialogPositiveClick(AppCompatDialogFragment dialog, Bundle args) {
+        String answerText;
+
+        answerText = args.getString("questionText");
+    }
+
+    @Override
+    public void onDialogNegativeClick(AppCompatDialogFragment dialog) {
+
     }
 }

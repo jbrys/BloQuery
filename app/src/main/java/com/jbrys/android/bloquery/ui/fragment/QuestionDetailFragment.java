@@ -3,6 +3,8 @@ package com.jbrys.android.bloquery.ui.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatDialogFragment;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import com.jbrys.android.bloquery.api.DataSource;
 import com.jbrys.android.bloquery.api.model.Answer;
 import com.jbrys.android.bloquery.api.model.Question;
 import com.jbrys.android.bloquery.ui.adapter.AnswerItemAdapter;
+import com.jbrys.android.bloquery.ui.dialog.AnswerQuestionDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +25,7 @@ import java.util.List;
 /**
  * Created by jeffbrys on 12/23/15.
  */
-public class QuestionDetailFragment extends Fragment {
+public class QuestionDetailFragment extends Fragment implements AnswerQuestionDialog.AnswerDialogListener {
 
     private static final String QUESTION_ID = "questionId";
     private static final String QUESTION_ASKER = "askerId";
@@ -103,5 +106,23 @@ public class QuestionDetailFragment extends Fragment {
 
         mQuestionTextView.setText(mQuestionText);
     }
+
+    @Override
+    public void onDialogPositiveClick(AppCompatDialogFragment dialog) {
+        AppCompatEditText answerTextView;
+        String answerText;
+
+        answerTextView = (AppCompatEditText) dialog.getDialog().findViewById(R.id.et_answer_dialog);
+        answerText = answerTextView.getText().toString();
+        mDataSource.submitAnswer(answerText, mQuestionId);
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogNegativeClick(AppCompatDialogFragment dialog) {
+        dialog.dismiss();
+    }
+
+
 
 }

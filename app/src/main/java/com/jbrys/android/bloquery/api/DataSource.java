@@ -2,6 +2,7 @@ package com.jbrys.android.bloquery.api;
 
 import android.util.Log;
 
+import com.jbrys.android.bloquery.BloQueryApplication;
 import com.jbrys.android.bloquery.api.model.Answer;
 import com.jbrys.android.bloquery.api.model.Question;
 import com.parse.DeleteCallback;
@@ -131,4 +132,11 @@ public class DataSource {
         e.printStackTrace();
     }
 
+    public void submitAnswer(String answerText, String questionId){
+        Answer answer = new Answer();
+        answer.setAnswerText(answerText);
+        answer.setQuestionId(questionId);
+        answer.setAnswererId(BloQueryApplication.getCurrentUser().getObjectId());
+        answer.saveEventually();
+    }
 }
