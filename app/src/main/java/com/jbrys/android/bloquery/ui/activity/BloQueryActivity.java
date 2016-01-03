@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
 
     private ParseUser currentUser;
 
+    private Toolbar mToolbar;
     private TextView userNameTextView;
     private Button logout;
 
@@ -31,6 +33,10 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.bloquery_activity);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+
         getFragmentManager().beginTransaction()
                 .add(R.id.bloquery_list_layout, new QuestionsFragment())
                 .commit();
