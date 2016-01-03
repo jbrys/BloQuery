@@ -103,4 +103,5 @@ public class QuestionDetailFragment extends Fragment {
 
         mQuestionTextView.setText(mQuestionText);
     }
+
 }

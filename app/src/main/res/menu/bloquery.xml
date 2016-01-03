@@ -6,8 +6,7 @@
         android:id="@+id/menu_answer"
         android:icon="@drawable/ic_lightbulb_outline_white_36dp"
         android:title="Answer Question"
-        app:showAsAction="never" />
-
-
+        android:visible="false"
+        app:showAsAction="always" />
 
 </menu>
