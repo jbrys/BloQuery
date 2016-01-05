@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.AppCompatEditText;
 
@@ -16,7 +17,7 @@ import com.jbrys.android.bloquery.R;
 public class AnswerQuestionDialog extends AppCompatDialogFragment {
 
     public interface AnswerDialogListener {
-        public void onDialogPositiveClick(AppCompatDialogFragment dialog, Bundle args);
+        public void onDialogPositiveClick(AppCompatDialogFragment dialog);
         public void onDialogNegativeClick(AppCompatDialogFragment dialog);
     }
 
@@ -26,8 +27,10 @@ public class AnswerQuestionDialog extends AppCompatDialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
+        AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
+
         try {
-            mListener = (AnswerDialogListener) activity;
+            mListener = (AnswerDialogListener) appCompatActivity.getSupportFragmentManager().findFragmentById(0);
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
             + " must implement AnswerDialogListener");
@@ -52,7 +55,7 @@ public class AnswerQuestionDialog extends AppCompatDialogFragment {
                         Bundle args = new Bundle();
                         args.putString(questionText, "questionText");
 
-                        mListener.onDialogPositiveClick(AnswerQuestionDialog.this, args);
+                        mListener.onDialogPositiveClick(AnswerQuestionDialog.this);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

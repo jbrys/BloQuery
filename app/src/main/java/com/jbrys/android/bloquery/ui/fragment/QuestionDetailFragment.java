@@ -3,11 +3,15 @@ package com.jbrys.android.bloquery.ui.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -66,6 +70,8 @@ public class QuestionDetailFragment extends Fragment implements AnswerQuestionDi
         mQuestionId = args.getString(QUESTION_ID);
         mAskerId = args.getString(QUESTION_ASKER);
         mQuestionText = args.getString(QUESTION_TEXT);
+
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -108,6 +114,21 @@ public class QuestionDetailFragment extends Fragment implements AnswerQuestionDi
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.question_detail, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_answer){
+            showAnswerQuestionDialog();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onDialogPositiveClick(AppCompatDialogFragment dialog) {
         AppCompatEditText answerTextView;
         String answerText;
@@ -123,6 +144,14 @@ public class QuestionDetailFragment extends Fragment implements AnswerQuestionDi
         dialog.dismiss();
     }
 
+    /*
+    * private methods
+    */
 
+    public void showAnswerQuestionDialog() {
+        AnswerQuestionDialog dialog = new AnswerQuestionDialog();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        dialog.show(activity.getSupportFragmentManager(), "answer");
+    }
 
 }
