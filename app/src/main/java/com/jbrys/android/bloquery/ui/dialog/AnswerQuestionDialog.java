@@ -1,13 +1,10 @@
 package com.jbrys.android.bloquery.ui.dialog;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
-import android.support.v7.widget.AppCompatEditText;
 
 import com.jbrys.android.bloquery.R;
 
@@ -24,21 +21,14 @@ public class AnswerQuestionDialog extends AppCompatDialogFragment {
     AnswerDialogListener mListener;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         try {
-            mListener = (AnswerDialogListener) appCompatActivity.getSupportFragmentManager().findFragmentById(0);
+            mListener = (AnswerDialogListener) getTargetFragment();
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-            + " must implement AnswerDialogListener");
+            throw new ClassCastException(getParentFragment().toString()
+                    + " must implement AnswerDialogListener");
         }
-    }
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AnswerSubmit);
 
@@ -46,14 +36,6 @@ public class AnswerQuestionDialog extends AppCompatDialogFragment {
                 .setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        AppCompatEditText questionTextView;
-                        String questionText;
-
-                        questionTextView = (AppCompatEditText) getDialog().findViewById(R.id.et_answer_dialog);
-                        questionText = questionTextView.getText().toString();
-
-                        Bundle args = new Bundle();
-                        args.putString(questionText, "questionText");
 
                         mListener.onDialogPositiveClick(AnswerQuestionDialog.this);
                     }

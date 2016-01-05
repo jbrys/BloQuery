@@ -1,8 +1,8 @@
 package com.jbrys.android.bloquery.ui.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.AppCompatEditText;
@@ -151,6 +151,7 @@ public class QuestionDetailFragment extends Fragment implements AnswerQuestionDi
     public void showAnswerQuestionDialog() {
         AnswerQuestionDialog dialog = new AnswerQuestionDialog();
         AppCompatActivity activity = (AppCompatActivity) getActivity();
+        dialog.setTargetFragment(this, 0);
         dialog.show(activity.getSupportFragmentManager(), "answer");
     }
 

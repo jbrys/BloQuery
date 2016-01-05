@@ -2,7 +2,6 @@ package com.jbrys.android.bloquery.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -41,7 +40,7 @@ public class BloQueryActivity extends AppCompatActivity implements
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .add(R.id.bloquery_list_layout, new QuestionsFragment())
                 .commit();
 
@@ -106,8 +105,7 @@ public class BloQueryActivity extends AppCompatActivity implements
     @Override
     public void onItemAnswersClicked(QuestionsFragment questionsFragment, Question question) {
 
-        getFragmentManager().beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.bloquery_list_layout, QuestionDetailFragment.detailFragmentForQuestion(question))
                 .addToBackStack("ANSWER")
                 .commit();
