@@ -15,17 +15,15 @@ import java.util.List;
 /**
  * Created by jeffbrys on 12/26/15.
  */
-public class AnswerItemAdapter extends RecyclerView.Adapter<AnswerItemAdapter.AnswerItemAdapterViewHolder> {
+public class AnswerItemAdapter extends RecyclerView.Adapter<AnswerItemAdapter.AnswerItemAdapterViewHolder>{
 
     private List<Answer> mAnswerList = new ArrayList<>();
 
     public AnswerItemAdapter(List<Answer> answers) { mAnswerList = answers;}
 
-    String votes;
 
     @Override
     public AnswerItemAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        votes = parent.getResources().getString(R.string.votes);
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.answer_item,
                 parent, false);
         return new AnswerItemAdapterViewHolder(inflate);
@@ -57,7 +55,7 @@ public class AnswerItemAdapter extends RecyclerView.Adapter<AnswerItemAdapter.An
 
         void update(Answer answer) {
             this.mAnswer = answer;
-            votes = String.format("%d %s", answer.getUpvotes(), votes);
+            String votes = String.format("%d %s", answer.getUpvotes(), "votes");
 
             answerTextView.setText(answer.getAnswerText());
             votesTextView.setText(votes);

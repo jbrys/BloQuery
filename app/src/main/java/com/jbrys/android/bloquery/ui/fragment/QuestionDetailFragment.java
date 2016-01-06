@@ -107,6 +107,13 @@ public class QuestionDetailFragment extends Fragment implements AnswerQuestionDi
                 }
                 mAdapter.notifyDataSetChanged();
             }
+
+            @Override
+            public void onAnswerSubmitted(Answer answer) {
+                mAnswerList.add(0, answer);
+                mAdapter.notifyItemInserted(0);
+                mRecyclerView.smoothScrollToPosition(0);
+            }
         });
         mDataSource.loadAnswersFromQuestion(mQuestionId);
 

@@ -26,9 +26,7 @@ public class BloQueryActivity extends AppCompatActivity implements
 
     private ParseUser currentUser;
 
-    private Toolbar mToolbar;
     private TextView userNameTextView;
-    private Button logout;
     private MenuItem answerItem;
 
     @Override
@@ -37,8 +35,8 @@ public class BloQueryActivity extends AppCompatActivity implements
 
         setContentView(R.layout.bloquery_activity);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.bloquery_list_layout, new QuestionsFragment())
@@ -52,7 +50,7 @@ public class BloQueryActivity extends AppCompatActivity implements
             userNameTextView.setText(currentUser.getUsername());
         }
 
-        logout = (Button) findViewById(R.id.bloquery_btn_logout);
+        Button logout = (Button) findViewById(R.id.bloquery_btn_logout);
         logout.setOnClickListener(this);
 
     }

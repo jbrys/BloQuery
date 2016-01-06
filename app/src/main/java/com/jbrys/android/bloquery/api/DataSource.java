@@ -9,6 +9,7 @@ import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +27,7 @@ public class DataSource {
 
     public static interface AnswerChangedListener {
         void onAnswersLoaded(List<Answer> answers);
+        void onAnswerSubmitted(Answer answer);
     }
 
     private QuestionChangedListener mQuestionChangedListener;
@@ -117,8 +119,14 @@ public class DataSource {
         query.whereEqualTo("questionId", questionId);
         query.findInBackground(new FindCallback<Answer>() {
             @Override
-            public void done(List<Answer> answers, ParseException e) {
+            public void done(final List<Answer> answers, ParseException e) {
                 if (e == null) {
+                    Answer.unpinAllInBackground("answers", new DeleteCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            Answer.pinAllInBackground(answers);
+                        }
+                    });
                     mAnswerChangedListener.onAnswersLoaded(answers);
                 } else {
                     logError(e);
@@ -133,10 +141,19 @@ public class DataSource {
     }
 
     public void submitAnswer(String answerText, String questionId){
-        Answer answer = new Answer();
+        final Answer answer = new Answer();
         answer.setAnswerText(answerText);
         answer.setQuestionId(questionId);
         answer.setAnswererId(BloQueryApplication.getCurrentUser().getObjectId());
-        answer.saveEventually();
+        answer.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    mAnswerChangedListener.onAnswerSubmitted(answer);
+                } else {
+                    logError(e);
+                }
+            }
+        });
     }
 }
