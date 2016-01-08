@@ -114,7 +114,7 @@ public class DataSource {
         });
     }
 
-    public void loadAnswersFromQuestion(String questionId) {
+    public void loadAnswersForQuestion(String questionId) {
         ParseQuery<Answer> query = ParseQuery.getQuery("Answer");
         query.whereEqualTo("questionId", questionId);
         query.findInBackground(new FindCallback<Answer>() {
@@ -127,6 +127,22 @@ public class DataSource {
                             Answer.pinAllInBackground(answers);
                         }
                     });
+                    mAnswerChangedListener.onAnswersLoaded(answers);
+                } else {
+                    logError(e);
+                }
+            }
+        });
+    }
+
+    public void loadAnswersForQuestionFromLocal(String questionId) {
+        ParseQuery<Answer> query = ParseQuery.getQuery("Answer");
+        query.whereEqualTo("questionId", questionId);
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<Answer>() {
+            @Override
+            public void done(final List<Answer> answers, ParseException e) {
+                if (e == null) {
                     mAnswerChangedListener.onAnswersLoaded(answers);
                 } else {
                     logError(e);

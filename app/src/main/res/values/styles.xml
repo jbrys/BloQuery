@@ -60,7 +60,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="AnswerSubmit" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="DialogSubmit" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/colorTextIcons</item>
         <item name="android:textColor">@color/colorTextIcons</item>
         <item name="android:background">@color/colorPrimary</item>

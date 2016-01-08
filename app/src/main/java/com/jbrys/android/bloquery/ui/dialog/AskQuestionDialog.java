@@ -9,49 +9,40 @@ import android.support.v7.app.AppCompatDialogFragment;
 import com.jbrys.android.bloquery.R;
 
 /**
- * Created by jeffbrys on 1/2/16.
+ * Created by jeffbrys on 1/5/16.
  */
-public class AnswerQuestionDialog extends AppCompatDialogFragment {
+public class AskQuestionDialog extends AppCompatDialogFragment {
 
-    public interface AnswerDialogListener {
+    public interface AskQuestionDialogListener{
         public void onDialogPositiveClick(AppCompatDialogFragment dialog);
-        public void onDialogNegativeClick(AppCompatDialogFragment dialog);
     }
 
-    AnswerDialogListener mListener;
+    AskQuestionDialogListener mListener;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         try {
-            mListener = (AnswerDialogListener) getTargetFragment();
+            mListener = (AskQuestionDialogListener) getTargetFragment();
         } catch (ClassCastException e) {
             throw new ClassCastException(getParentFragment().toString()
-                    + " must implement AnswerDialogListener");
+            + " must implement AskQuestionDialogListener");
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.DialogSubmit);
-
-        builder.setView(R.layout.submit_answer_dialog)
+        builder.setView(R.layout.submit_question_dialog)
                 .setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        mListener.onDialogPositiveClick(AnswerQuestionDialog.this);
+                        mListener.onDialogPositiveClick(AskQuestionDialog.this);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListener.onDialogNegativeClick(AnswerQuestionDialog.this);
+                        dismiss();
                     }
                 });
 
         return builder.create();
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
     }
 }

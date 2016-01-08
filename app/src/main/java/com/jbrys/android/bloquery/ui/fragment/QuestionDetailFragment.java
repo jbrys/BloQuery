@@ -115,7 +115,11 @@ public class QuestionDetailFragment extends Fragment implements AnswerQuestionDi
                 mRecyclerView.smoothScrollToPosition(0);
             }
         });
-        mDataSource.loadAnswersFromQuestion(mQuestionId);
+        mDataSource.loadAnswersForQuestionFromLocal(mQuestionId);
+        if (mAnswerList.isEmpty()) {
+            mDataSource.loadAnswersForQuestion(mQuestionId);
+        }
+        // maybe load any newer answers here
 
         mQuestionTextView.setText(mQuestionText);
     }
