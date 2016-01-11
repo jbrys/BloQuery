@@ -23,6 +23,7 @@ public class DataSource {
     public static interface QuestionChangedListener {
         void onQuestionsLoaded(List<Question> questions);
         void onRecentQuestionsLoaded(List<Question> questions);
+        void onQuestionSubmitted(Question question);
     }
 
     public static interface AnswerChangedListener {
@@ -166,6 +167,22 @@ public class DataSource {
             public void done(ParseException e) {
                 if (e == null) {
                     mAnswerChangedListener.onAnswerSubmitted(answer);
+                } else {
+                    logError(e);
+                }
+            }
+        });
+    }
+
+    public void submitQuestion(String questionText) {
+        final Question question = new Question();
+        question.setAskerId(BloQueryApplication.getCurrentUser().getObjectId());
+        question.setQuestionText(questionText);
+        question.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    mQuestionChangedListener.onQuestionSubmitted(question);
                 } else {
                     logError(e);
                 }

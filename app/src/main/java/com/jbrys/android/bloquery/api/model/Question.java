@@ -1,7 +1,12 @@
 package com.jbrys.android.bloquery.api.model;
 
+import com.parse.FunctionCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseCloud;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+
+import java.util.HashMap;
 
 /**
  * Created by jeffbrys on 12/8/15.
@@ -50,16 +55,13 @@ public class Question extends ParseObject{
     }
 
     public int getNumAnswers() {
-        return numAnswers == 0 ? getInt("numAnswers") : numAnswers;
+        fetchNumAnswers();
+        return getInt("numAnswers");
     }
 
     public void setNumAnswers(int numAnswers) {
 
-        if (this.numAnswers == 0) {
-            put("numAnswers", numAnswers);
-        } else {
-            this.numAnswers = numAnswers;
-        }
+        put("numAnswers", numAnswers);
     }
 
     public int getInterest() {
@@ -72,6 +74,23 @@ public class Question extends ParseObject{
         }else {
             this.interest = interest;
         }
+    }
+
+    private void fetchNumAnswers() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("questionId", this.getObjectId());
+        ParseCloud.callFunctionInBackground("numAnswers", params,
+                new FunctionCallback<Integer>() {
+                    @Override
+                    public void done(Integer object, ParseException e) {
+                        if (e == null) {
+                            setNumAnswers(object);
+                        } else {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
     }
 
 }

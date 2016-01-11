@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialogFragment;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +20,7 @@ import com.jbrys.android.bloquery.R;
 import com.jbrys.android.bloquery.api.DataSource;
 import com.jbrys.android.bloquery.api.model.Question;
 import com.jbrys.android.bloquery.ui.adapter.QuestionItemAdapter;
+import com.jbrys.android.bloquery.ui.dialog.AskQuestionDialog;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -25,7 +29,10 @@ import java.util.List;
 /**
  * Created by jeffbrys on 12/8/15.
  */
-public class QuestionsFragment extends Fragment implements QuestionItemAdapter.Listener {
+public class QuestionsFragment extends Fragment implements QuestionItemAdapter.Listener,
+        AskQuestionDialog.AskQuestionDialogListener{
+
+
 
     public static interface Listener {
         public void onItemAnswersClicked(QuestionsFragment questionsFragment, Question question);
@@ -102,6 +109,13 @@ public class QuestionsFragment extends Fragment implements QuestionItemAdapter.L
                 mAdapter.notifyItemRangeInserted(0, questions.size());
                 mRecyclerView.smoothScrollToPosition(0);
             }
+
+            @Override
+            public void onQuestionSubmitted(Question question) {
+                mQuestionList.add(0, question);
+                mAdapter.notifyItemInserted(0);
+                mRecyclerView.smoothScrollToPosition(0);
+            }
         });
 
         mDataSource.loadQuestionsFromLocal();
@@ -116,6 +130,7 @@ public class QuestionsFragment extends Fragment implements QuestionItemAdapter.L
     @Override
     public void onResume() {
         super.onResume();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -140,6 +155,22 @@ public class QuestionsFragment extends Fragment implements QuestionItemAdapter.L
         }
     }
 
+    @Override
+    public void onDialogPositiveClick(AppCompatDialogFragment dialog) {
+        AppCompatEditText questionTextView;
+        String questionText;
+
+        questionTextView = (AppCompatEditText) dialog.getDialog().findViewById(R.id.et_question_dialog);
+        questionText = questionTextView.getText().toString();
+        mDataSource.submitQuestion(questionText);
+        dialog.dismiss();
+
+    }
+
     private void showAskQuestionDialog() {
+        AskQuestionDialog dialog = new AskQuestionDialog();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        dialog.setTargetFragment(this, 0);
+        dialog.show(activity.getSupportFragmentManager(), "question");
     }
 }

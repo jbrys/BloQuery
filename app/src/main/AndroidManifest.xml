@@ -9,7 +9,8 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".ui.activity.BloQueryActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -17,9 +18,11 @@
         </activity>
 
         <activity android:name=".ui.activity.SignupActivity"
-            android:theme="@style/AppTheme.Account"/>
+            android:theme="@style/AppTheme.Account"
+            android:screenOrientation="portrait"/>
         <activity android:name=".ui.activity.LoginActivity"
-                  android:theme="@style/AppTheme.Account"/>
+                  android:theme="@style/AppTheme.Account"
+            android:screenOrientation="portrait"/>
 
     </application>
 
