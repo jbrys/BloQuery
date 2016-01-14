@@ -9,4 +9,6 @@
     <string name="submit_answer_hint">Type your answer to the question here...</string>
     <string name="submit_question">Submit Question</string>
     <string name="submit_question_hint">What is your question?</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="logout">Logout</string>
 </resources>
