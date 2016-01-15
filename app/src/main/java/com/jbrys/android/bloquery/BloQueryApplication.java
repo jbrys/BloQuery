@@ -3,6 +3,7 @@ package com.jbrys.android.bloquery;
 import android.app.Application;
 
 import com.jbrys.android.bloquery.api.DataSource;
+import com.jbrys.android.bloquery.api.model.Answer;
 import com.jbrys.android.bloquery.api.model.Question;
 import com.jbrys.android.bloquery.api.model.User;
 import com.parse.Parse;
@@ -30,6 +31,7 @@ public class BloQueryApplication extends Application {
         Parse.enableLocalDatastore(this);
         ParseUser.registerSubclass(User.class);
         ParseObject.registerSubclass(Question.class);
+        ParseObject.registerSubclass(Answer.class);
         Parse.initialize(this, "piFsT12m1vuIAklPVzM9SK4c1TsQygWM0jT1NYny", "wqn5T3dyxfCGDeXwTtI4MtUKwml9RJuchfjCzpkv");
 
         sharedInstance = this;

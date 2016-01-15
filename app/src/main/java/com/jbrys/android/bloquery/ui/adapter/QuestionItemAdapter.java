@@ -19,28 +19,28 @@ import java.util.List;
 /**
  * Created by jeffbrys on 12/8/15.
  */
-public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterViewHolder> {
+public class QuestionItemAdapter extends RecyclerView.Adapter<QuestionItemAdapter.QuestionItemAdapterViewHolder> {
 
     public static interface Listener {
-        void onItemAnswersClicked(ItemAdapter itemAdapter, Question question);
+        void onItemAnswersClicked(QuestionItemAdapter questionItemAdapter, Question question);
     }
 
     private List<Question> mQuestionList = new ArrayList<>();
     private WeakReference<Listener> mListener;
 
 
-    public ItemAdapter(List<Question> questions){
+    public QuestionItemAdapter(List<Question> questions){
         mQuestionList = questions;
     }
 
     @Override
-    public ItemAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public QuestionItemAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_item, parent, false);
-        return new ItemAdapterViewHolder(inflate);
+        return new QuestionItemAdapterViewHolder(inflate);
     }
 
     @Override
-    public void onBindViewHolder(ItemAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(QuestionItemAdapterViewHolder holder, int position) {
 
         holder.update(mQuestionList.get(position));
     }
@@ -61,7 +61,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
         this.mListener = new WeakReference<>(listener);
     }
 
-    class ItemAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class QuestionItemAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         Question mQuestion;
         boolean contentExpanded;
@@ -72,7 +72,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
         TextView expandedQuestionTextView;
         Button answersButton;
 
-        public ItemAdapterViewHolder(View itemView) {
+        public QuestionItemAdapterViewHolder(View itemView) {
             super(itemView);
 
             questionTextView = (TextView) itemView.findViewById(R.id.question_txt);
@@ -105,7 +105,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
 
             if (v == answersButton){
                 if (getListener() != null) {
-                    getListener().onItemAnswersClicked(ItemAdapter.this, mQuestion);
+                    getListener().onItemAnswersClicked(QuestionItemAdapter.this, mQuestion);
                 }
             }
         }

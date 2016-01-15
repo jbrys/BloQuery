@@ -2,11 +2,14 @@ package com.jbrys.android.bloquery.api;
 
 import android.util.Log;
 
+import com.jbrys.android.bloquery.BloQueryApplication;
+import com.jbrys.android.bloquery.api.model.Answer;
 import com.jbrys.android.bloquery.api.model.Question;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,24 +20,34 @@ import java.util.List;
  */
 public class DataSource {
 
-    public static interface DataSourceChangedListener {
+    public static interface QuestionChangedListener {
         void onQuestionsLoaded(List<Question> questions);
         void onRecentQuestionsLoaded(List<Question> questions);
+        void onQuestionSubmitted(Question question);
     }
 
-    private DataSourceChangedListener mListener;
+    public static interface AnswerChangedListener {
+        void onAnswersLoaded(List<Answer> answers);
+        void onAnswerSubmitted(Answer answer);
+    }
+
+    private QuestionChangedListener mQuestionChangedListener;
+    private AnswerChangedListener mAnswerChangedListener;
     private List<Question> mQuestionList;
 
     public DataSource() {
-        this.mListener = null;
+        this.mQuestionChangedListener = null;
         mQuestionList = new ArrayList<>();
 //        createFakeData();
     }
 
-    public void setDataSourceChangedListener(DataSourceChangedListener listener) {
-        this.mListener = listener;
+    public void setQuestionChangedListener(QuestionChangedListener listener) {
+        this.mQuestionChangedListener = listener;
     }
 
+    public void setAnswerChangedListener(AnswerChangedListener listener) {
+        this.mAnswerChangedListener = listener;
+    }
 
     void createFakeData() {
         for (int i = 0; i < 10; i++) {
@@ -57,7 +70,7 @@ public class DataSource {
                             Question.pinAllInBackground("questions", list);
                         }
                     });
-                    mListener.onQuestionsLoaded(list);
+                    mQuestionChangedListener.onQuestionsLoaded(list);
 
 
                 } else {
@@ -76,7 +89,7 @@ public class DataSource {
             @Override
             public void done(List<Question> list, ParseException e) {
                 if (e == null){
-                    mListener.onQuestionsLoaded(list);
+                    mQuestionChangedListener.onQuestionsLoaded(list);
 
                 } else {
                     logError(e);
@@ -93,8 +106,45 @@ public class DataSource {
             @Override
             public void done(List<Question> objects, ParseException e) {
                 if (e == null){
-                    mListener.onRecentQuestionsLoaded(objects);
+                    mQuestionChangedListener.onRecentQuestionsLoaded(objects);
 
+                } else {
+                    logError(e);
+                }
+            }
+        });
+    }
+
+    public void loadAnswersForQuestion(String questionId) {
+        ParseQuery<Answer> query = ParseQuery.getQuery("Answer");
+        query.whereEqualTo("questionId", questionId);
+        query.findInBackground(new FindCallback<Answer>() {
+            @Override
+            public void done(final List<Answer> answers, ParseException e) {
+                if (e == null) {
+                    Answer.unpinAllInBackground("answers", new DeleteCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            Answer.pinAllInBackground(answers);
+                        }
+                    });
+                    mAnswerChangedListener.onAnswersLoaded(answers);
+                } else {
+                    logError(e);
+                }
+            }
+        });
+    }
+
+    public void loadAnswersForQuestionFromLocal(String questionId) {
+        ParseQuery<Answer> query = ParseQuery.getQuery("Answer");
+        query.whereEqualTo("questionId", questionId);
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<Answer>() {
+            @Override
+            public void done(final List<Answer> answers, ParseException e) {
+                if (e == null) {
+                    mAnswerChangedListener.onAnswersLoaded(answers);
                 } else {
                     logError(e);
                 }
@@ -107,4 +157,36 @@ public class DataSource {
         e.printStackTrace();
     }
 
+    public void submitAnswer(String answerText, String questionId){
+        final Answer answer = new Answer();
+        answer.setAnswerText(answerText);
+        answer.setQuestionId(questionId);
+        answer.setAnswererId(BloQueryApplication.getCurrentUser().getObjectId());
+        answer.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    mAnswerChangedListener.onAnswerSubmitted(answer);
+                } else {
+                    logError(e);
+                }
+            }
+        });
+    }
+
+    public void submitQuestion(String questionText) {
+        final Question question = new Question();
+        question.setAskerId(BloQueryApplication.getCurrentUser().getObjectId());
+        question.setQuestionText(questionText);
+        question.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    mQuestionChangedListener.onQuestionSubmitted(question);
+                } else {
+                    logError(e);
+                }
+            }
+        });
+    }
 }

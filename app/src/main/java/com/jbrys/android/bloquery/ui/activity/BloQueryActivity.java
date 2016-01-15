@@ -3,6 +3,8 @@ package com.jbrys.android.bloquery.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,20 +19,26 @@ import com.parse.ParseUser;
 /**
  * Created by jeffbrys on 11/23/15.
  */
-public class BloQueryActivity extends AppCompatActivity implements Button.OnClickListener, QuestionsFragment.Listener{
+public class BloQueryActivity extends AppCompatActivity implements
+        Button.OnClickListener,
+        QuestionsFragment.Listener{
     private final String TAG = getClass().getSimpleName();
 
     private ParseUser currentUser;
 
     private TextView userNameTextView;
-    private Button logout;
+    private MenuItem answerItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.bloquery_activity);
-        getFragmentManager().beginTransaction()
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportFragmentManager().beginTransaction()
                 .add(R.id.bloquery_list_layout, new QuestionsFragment())
                 .commit();
 
@@ -42,7 +50,7 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
             userNameTextView.setText(currentUser.getUsername());
         }
 
-        logout = (Button) findViewById(R.id.bloquery_btn_logout);
+        Button logout = (Button) findViewById(R.id.bloquery_btn_logout);
         logout.setOnClickListener(this);
 
     }
@@ -61,6 +69,29 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
         }
     }
 
+
+    @Override
+    public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+        } else {
+            if (answerItem != null) {
+                answerItem.setVisible(false);
+                answerItem.setEnabled(false);
+            }
+
+            getFragmentManager().popBackStack();
+        }
+    }
+
+
+
+    /*
+    * OnClickListeners
+    */
+
     @Override
     public void onClick(View v) {
         ParseUser.logOutInBackground();
@@ -70,21 +101,16 @@ public class BloQueryActivity extends AppCompatActivity implements Button.OnClic
     }
 
     @Override
-    public void onBackPressed() {
-        int count = getFragmentManager().getBackStackEntryCount();
-
-        if (count == 0) {
-            super.onBackPressed();
-        } else {
-            getFragmentManager().popBackStack();
-        }
-    }
-
-    @Override
     public void onItemAnswersClicked(QuestionsFragment questionsFragment, Question question) {
-        getFragmentManager().beginTransaction()
+
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.bloquery_list_layout, QuestionDetailFragment.detailFragmentForQuestion(question))
-                .addToBackStack(null)
+                .addToBackStack("ANSWER")
                 .commit();
+
     }
+
+
+
+
 }

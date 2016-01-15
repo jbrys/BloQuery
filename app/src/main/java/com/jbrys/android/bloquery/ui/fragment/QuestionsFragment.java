@@ -1,19 +1,26 @@
 package com.jbrys.android.bloquery.ui.fragment;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialogFragment;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.jbrys.android.bloquery.R;
 import com.jbrys.android.bloquery.api.DataSource;
 import com.jbrys.android.bloquery.api.model.Question;
-import com.jbrys.android.bloquery.ui.adapter.ItemAdapter;
+import com.jbrys.android.bloquery.ui.adapter.QuestionItemAdapter;
+import com.jbrys.android.bloquery.ui.dialog.AskQuestionDialog;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -22,7 +29,10 @@ import java.util.List;
 /**
  * Created by jeffbrys on 12/8/15.
  */
-public class QuestionsFragment extends Fragment implements ItemAdapter.Listener {
+public class QuestionsFragment extends Fragment implements QuestionItemAdapter.Listener,
+        AskQuestionDialog.AskQuestionDialogListener{
+
+
 
     public static interface Listener {
         public void onItemAnswersClicked(QuestionsFragment questionsFragment, Question question);
@@ -32,7 +42,7 @@ public class QuestionsFragment extends Fragment implements ItemAdapter.Listener 
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
-    private ItemAdapter mAdapter;
+    private QuestionItemAdapter mAdapter;
     private List<Question> mQuestionList = new ArrayList<>();
 
     private WeakReference<Listener> mListenerRef;
@@ -46,8 +56,9 @@ public class QuestionsFragment extends Fragment implements ItemAdapter.Listener 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -63,7 +74,7 @@ public class QuestionsFragment extends Fragment implements ItemAdapter.Listener 
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mAdapter = new ItemAdapter(mQuestionList);
+        mAdapter = new QuestionItemAdapter(mQuestionList);
         mAdapter.setListener(this);
         mRecyclerView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -77,7 +88,7 @@ public class QuestionsFragment extends Fragment implements ItemAdapter.Listener 
         });
 
         mDataSource = new DataSource();
-        mDataSource.setDataSourceChangedListener(new DataSource.DataSourceChangedListener() {
+        mDataSource.setQuestionChangedListener(new DataSource.QuestionChangedListener() {
             @Override
             public void onQuestionsLoaded(List<Question> questions) {
                 for (Question q : questions) {
@@ -98,6 +109,13 @@ public class QuestionsFragment extends Fragment implements ItemAdapter.Listener 
                 mAdapter.notifyItemRangeInserted(0, questions.size());
                 mRecyclerView.smoothScrollToPosition(0);
             }
+
+            @Override
+            public void onQuestionSubmitted(Question question) {
+                mQuestionList.add(0, question);
+                mAdapter.notifyItemInserted(0);
+                mRecyclerView.smoothScrollToPosition(0);
+            }
         });
 
         mDataSource.loadQuestionsFromLocal();
@@ -112,12 +130,47 @@ public class QuestionsFragment extends Fragment implements ItemAdapter.Listener 
     @Override
     public void onResume() {
         super.onResume();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onItemAnswersClicked(ItemAdapter itemAdapter, Question question) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.questions, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_ask_question) {
+            showAskQuestionDialog();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onItemAnswersClicked(QuestionItemAdapter questionItemAdapter, Question question) {
         if (mListenerRef.get() != null) {
             mListenerRef.get().onItemAnswersClicked(this, question);
         }
+    }
+
+    @Override
+    public void onDialogPositiveClick(AppCompatDialogFragment dialog) {
+        AppCompatEditText questionTextView;
+        String questionText;
+
+        questionTextView = (AppCompatEditText) dialog.getDialog().findViewById(R.id.et_question_dialog);
+        questionText = questionTextView.getText().toString();
+        mDataSource.submitQuestion(questionText);
+        dialog.dismiss();
+
+    }
+
+    private void showAskQuestionDialog() {
+        AskQuestionDialog dialog = new AskQuestionDialog();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        dialog.setTargetFragment(this, 0);
+        dialog.show(activity.getSupportFragmentManager(), "question");
     }
 }
